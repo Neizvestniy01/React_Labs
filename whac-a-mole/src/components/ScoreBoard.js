@@ -1,10 +1,10 @@
 import React from "react";
 
-const ScoreBoard = ({ score }) => {
+const ScoreBoard = ({ score, timeLeft }) => {
     return (
         <div className="score-board">
-            <span>Очки: {score}</span>
-            <span>Час: 60с</span>
+            <span>Score: {score}</span>
+            <span>Time: {timeLeft}s</span>
         </div>
     );
 };

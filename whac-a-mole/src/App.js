@@ -7,17 +7,9 @@ import "./App.css";
 const App = () => {
   const [currentPage, setCurrentPage] = useState("start");
   const [score, setScore] = useState(0);
-
-  const goToGame = () => {
-    setScore(0);
-    setCurrentPage("game");
-  };
-  const goToResult = () => {
-    setCurrentPage("result");
-  };
-  const goToStart = () => {
-    setCurrentPage("start");
-  };
+  const goToGame = () => setCurrentPage("game");
+  const goToResult = () => setCurrentPage("result");
+  const goToStart = () => setCurrentPage("start");
   return (
       <div className="app">
         {currentPage === "start" && <StartPage onStart={goToGame} />}
