@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import StartPage from "./pages/StartPage";
+import { StartPage } from "./pages/StartPage";
 import GamePage from "./pages/GamePage";
 import ResultPage from "./pages/ResultPage";
 import "./App.css";

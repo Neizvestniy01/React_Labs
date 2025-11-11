@@ -1,11 +1,12 @@
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 
-export const UseScore = (score, setScore) => {
+export const UseScore = () => {
+    const [score, setScore] = useState(0);
     const increaseScore = useCallback((points = 10) => {
         setScore(prev => prev + points);
-    }, [setScore]);
+    }, []);
     const resetScore = useCallback(() => {
         setScore(0);
-    }, [setScore]);
+    }, []);
     return { score, increaseScore, resetScore };
 };
