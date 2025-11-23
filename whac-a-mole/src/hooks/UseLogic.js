@@ -2,19 +2,22 @@ import { useState, useEffect, useCallback } from "react";
 
 const difficultyTimes = { easy: 1000, hard: 500, impossible: 300 };
 
-export function UseLogic(difficulty = "easy") {
+export function UseLogic(difficulty = "easy", fieldSize = 3) {
+    const cols = Number(fieldSize) || 3;
+    const totalHoles = cols * cols;
+    const moleTime = difficultyTimes[difficulty] ?? 1000;
     const [timeLeft, setTimeLeft] = useState(30);
     const [isPlaying, setIsPlaying] = useState(false);
     const [moleIndex, setMoleIndex] = useState(null);
-    const moleTime = difficultyTimes[difficulty];
 
     useEffect(() => {
         let timerInterval;
         let moleInterval;
         if (isPlaying) {
             setTimeLeft(30);
+            setMoleIndex(null);
             moleInterval = setInterval(() => {
-                setMoleIndex(Math.floor(Math.random() * 9));
+                setMoleIndex(Math.floor(Math.random() * totalHoles));
             }, moleTime);
             timerInterval = setInterval(() => {
                 setTimeLeft(prev => {
@@ -33,10 +36,12 @@ export function UseLogic(difficulty = "easy") {
             clearInterval(timerInterval);
             clearInterval(moleInterval);
         };
-    }, [isPlaying, moleTime]);
-
+    }, [isPlaying, moleTime, totalHoles]);
     const startGame = useCallback(() => setIsPlaying(true), []);
-    const endGame = useCallback(() => setIsPlaying(false), []);
+    const endGame = useCallback(() => {
+        setIsPlaying(false);
+        setMoleIndex(null);
+    }, []);
     const hitMole = useCallback(
         index => {
             if (isPlaying && index === moleIndex) {
@@ -47,5 +52,5 @@ export function UseLogic(difficulty = "easy") {
         },
         [isPlaying, moleIndex]
     );
-    return { moleIndex, timeLeft, isPlaying, startGame, endGame, hitMole };
+    return { moleIndex, timeLeft, isPlaying, startGame, endGame, hitMole, totalHoles, cols };
 }
