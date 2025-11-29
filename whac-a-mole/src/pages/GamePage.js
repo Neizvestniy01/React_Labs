@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { UseLogic } from "../hooks/UseLogic";
-import { UseScore } from "../hooks/UseScore";
-import ControlButtons from "../components/ControlButtons";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import "../App.css";
 import GameBoard from "../components/GameBoard";
 import ScoreBoard from "../components/ScoreBoard";
+import ControlButtons from "../components/ControlButtons";
 import EndGameModal from "../components/EndGameModal";
-import "../App.css";
+import { UseLogic } from "../hooks/UseLogic";
+import { UseScore } from "../hooks/UseScore";
 
-const GamePage = ({ onExit }) => {
-    const difficulty = localStorage.getItem("difficulty") || "easy";
-    const fieldSize = Number(localStorage.getItem("fieldSize") || 3);
+const GamePage = () => {
+    const { userId } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const difficulty = (location.state && location.state.difficulty) || localStorage.getItem("difficulty") || "easy";
+    const fieldSize = Number((location.state && location.state.fieldSize) || localStorage.getItem("fieldSize") || 3);
     const { moleIndex, timeLeft, isPlaying, startGame, endGame, hitMole, totalHoles, cols } = UseLogic(difficulty, fieldSize);
     const { score, increaseScore, resetScore } = UseScore();
     const [showModal, setShowModal] = useState(false);
@@ -20,11 +24,10 @@ const GamePage = ({ onExit }) => {
     useEffect(() => {
         if (!isPlaying && timeLeft === 0) setShowModal(true);
     }, [isPlaying, timeLeft]);
-
-    const handleHitMole = (index) => {
+    const handleHit = (index) => {
         if (hitMole(index)) increaseScore(10);
     };
-    const handleEndGame = () => {
+    const handleEnd = () => {
         endGame();
         setShowModal(true);
     };
@@ -36,13 +39,14 @@ const GamePage = ({ onExit }) => {
     const handleSelectDifficulty = () => {
         endGame();
         setShowModal(false);
-        if (onExit) onExit();
+        navigate("/", { replace: false });
     };
     return (
         <div className="page game-page">
+            <h2>Гра — користувач: {userId}</h2>
             <ScoreBoard score={score} timeLeft={timeLeft} />
-            <GameBoard moleIndex={moleIndex} onHit={handleHitMole} totalHoles={totalHoles} cols={cols} />
-            <ControlButtons onEnd={handleEndGame} />
+            <GameBoard moleIndex={moleIndex} onHit={handleHit} totalHoles={totalHoles} cols={cols} />
+            <ControlButtons onEnd={handleEnd} />
             {showModal && (
                 <EndGameModal
                     score={score}

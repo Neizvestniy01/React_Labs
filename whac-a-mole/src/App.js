@@ -1,25 +1,16 @@
-import React, { useState } from "react";
-import { StartPage } from "./pages/StartPage";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import StartPage from "./pages/StartPage";
 import GamePage from "./pages/GamePage";
-import ResultPage from "./pages/ResultPage";
-import "./App.css";
 
-const App = () => {
-  const [currentPage, setCurrentPage] = useState("start");
-  const [score, setScore] = useState(0);
-  const goToGame = () => setCurrentPage("game");
-  const goToResult = () => setCurrentPage("result");
-  const goToStart = () => setCurrentPage("start");
-  return (
-      <div className="app">
-        {currentPage === "start" && <StartPage onStart={goToGame} />}
-        {currentPage === "game" && (
-            <GamePage score={score} setScore={setScore} onEnd={goToResult} />
-        )}
-        {currentPage === "result" && (
-            <ResultPage score={score} onRestart={goToStart} />
-        )}
-      </div>
-  );
-};
+function App() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/home" element={<StartPage />} />
+                <Route path="/game/:userId" element={<GamePage />} />
+            </Routes>
+        </BrowserRouter>
+    );
+}
 export default App;
